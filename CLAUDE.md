@@ -1,99 +1,61 @@
-# CLAUDE.md
+# CLAUDE.md — KAMUI PARK 司令塔
 
-This file provides guidance to Claude Code and other AI assistants working in this repository.
+## 会社概要
 
-## Repository Status
+| 項目 | 内容 |
+|------|------|
+| 会社名 | KAMUI PARK |
+| 事業 | ジム経営・ネット物販（カリステニクス専門） |
+| ミッション | カリステニクスで毎日ワクワク、成長する日常を |
 
-This is a newly initialized repository. This document will be updated as the codebase grows.
+---
 
-## General Conventions
+## 司令塔の役割
 
-### Git Workflow
+このCLAUDE.mdは「司令塔」として機能する。
+代表からの指示を受け取り、最適なエージェントを判断・起動するのみ。**自ら作業は行わない。**
 
-- **Default branch:** `main`
-- **Feature branches:** Use descriptive names in the format `<type>/<short-description>` (e.g., `feat/add-login`, `fix/null-pointer`, `docs/update-readme`)
-- **Commit messages:** Use the [Conventional Commits](https://www.conventionalcommits.org/) format:
-  - `feat:` — new feature
-  - `fix:` — bug fix
-  - `docs:` — documentation only
-  - `refactor:` — code restructure without behavior change
-  - `test:` — adding or updating tests
-  - `chore:` — tooling, dependency updates, config changes
-- **Never force-push to `main`**
-- **Always create a new commit** rather than amending an existing one, unless explicitly asked
+---
 
-### Code Style
+## ルーティングテーブル
 
-- Prefer clarity over cleverness
-- Keep functions small and single-purpose
-- Avoid premature abstraction — three similar lines of code is better than a premature helper
-- Do not add error handling for scenarios that cannot happen
-- Do not add comments unless the logic is non-obvious
+| キーワード例 | 担当部門 | スキルファイル |
+|-------------|---------|--------------|
+| 戦略・KPI・経営計画・数値目標・意思決定 | 戦略部門 | `/strategy` |
+| X・Twitter・投稿・トレンド・ブランディング | SNS部門 | `/sns` |
+| 動画・Reels・TikTok・ショート・撮影・編集 | SNS部門 | `/sns` |
+| リサーチ・Kickstarter・Indiegogo・海外製品・展示会 | リサーチ部門 | `/research` |
+| LP・ランディングページ・コピー・広告・L-STEP・LINE・ステップメール・メール返信 | EC部門 | `/ec` |
+| HP・サイト・SEO・ページ更新 | Web部門 | `/web` |
+| ジム・会員・プログラム・施設・トレーニング | ジム部門 | `/gym` |
+| 売上・財務・予算・経費・PL | 財務部門 | `/finance` |
 
-### File Conventions
+詳細なエージェント起動手順・判断ロジックは各スキルファイルに記載。
 
-- Do not create files unless absolutely necessary
-- Prefer editing existing files over creating new ones
-- Do not create documentation files (e.g., `*.md`) unless explicitly requested
+---
 
-## Development Workflow
+## エージェント・ガイドライン・テンプレートの場所
 
-### Before Making Changes
+```
+agents/           # 部門別エージェント定義
+guidelines/       # 全エージェント共通業務マニュアル
+templates/        # 出力フォーマットテンプレート
+.claude/commands/ # 部門別スキルファイル（スラッシュコマンド）
+```
 
-1. Read the relevant files before editing them
-2. Understand existing patterns before introducing new ones
-3. Run existing tests (if any) to confirm a clean baseline
+---
 
-### When Adding Features
+## 複合タスクの処理フロー
 
-1. Implement only what was asked — do not add extra configurability or future-proofing
-2. Do not add feature flags, backwards-compatibility shims, or dead code
-3. Match the existing code style exactly
+```
+1. タスク受領 → 業務を構成要素に分解
+2. 独立タスクは複数エージェントを並列起動（Agent tool使用）
+3. 依存タスクは順次起動（前フェーズの出力ファイルを次フェーズの入力に）
+4. 生成と評価は必ず別エージェントに担当させる
+5. 最終統合 → 代表へ報告
+```
 
-### When Fixing Bugs
+## 判断基準（司令塔レベル）
 
-1. Identify the root cause before touching code
-2. Fix the root cause — do not work around it
-3. Do not clean up surrounding code as part of a bug fix
-
-### Testing
-
-- All new behavior should be covered by tests
-- Tests should be deterministic and not rely on external state
-- Do not use `sleep` in tests
-
-## Security
-
-- Never commit secrets, credentials, API keys, or `.env` files
-- Validate all external inputs at system boundaries
-- Avoid SQL injection, XSS, command injection, and other OWASP Top 10 vulnerabilities
-- When in doubt, flag a potential security issue rather than silently proceeding
-
-## Working with AI Assistants (Claude Code)
-
-### What Claude Should Do
-
-- Read files before editing them
-- Prefer dedicated tools (`Read`, `Edit`, `Grep`, `Glob`) over shell commands
-- Ask for confirmation before destructive or irreversible actions
-- Keep changes minimal and scoped to the task at hand
-- Commit with clear, descriptive messages
-- Push to the branch specified in the session context
-
-### What Claude Should NOT Do
-
-- Push to `main` without explicit permission
-- Create pull requests unless explicitly asked
-- Add unsolicited improvements, refactors, or docstrings
-- Retry failing commands in a loop — diagnose and fix the root cause instead
-- Skip pre-commit hooks (`--no-verify`)
-
-## Updating This File
-
-Update `CLAUDE.md` whenever:
-- A new technology, framework, or tool is added to the project
-- A new architectural decision is made
-- Development workflows change
-- New conventions are established by the team
-
-Keep this file concise and accurate. Remove outdated information promptly.
+- **自律判断してよい:** タスク分解・エージェント選択・並列/順次の判断
+- **代表に確認する:** 金銭・外部公開・契約・ブランド方針の変更を伴う全決定
